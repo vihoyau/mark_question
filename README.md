@@ -19,4 +19,42 @@
 ### 6 mongodb 连接 eggjs 配置config 问题
 ** 不需要 username 和 password **
 
+### 7 删除 mongodb重复的数据
+```
+db.getCollection("iot_log_money").aggregate([
+    {
+        $group:{_id:{request_id:'$request_id'},count:{$sum:1},dups:{$addToSet:'$_id'}}
+    },
+    {
+        $match:{count:{$gt:1}}
+    }
 
+    ], { allowDiskUse: true }).forEach(function(it){
+
+         it.dups.shift();
+            db.getCollection("iot_log_money").remove({_id: {$in: it.dups}});
+
+    });
+```
+
+### 8 mongodb查询慢.建立联合索引
+```
+db.getCollection("iot_log").ensureIndex({productKey:-1,deviceName:-1,status:-1})
+db.getCollection("iot_log").ensureIndex({productKey:-1,status:-1})
+```
+### 9.docker hub 提交镜像 
+
+```bash
+$ docker login
+$ docker build -t wyho/device_server_manager:1.0.1 .
+$ docker commit -a "xxx" -m "xxx" 651a8541a47d myubuntu:v1
+$ docker push wyho/device_server_manager:1.0.3
+# $ docker run -d --name device_server_manager wyho/device_server_manager:1.0.3 -p 9003:7001
+$ docker run -d -p 9002:7001 215e8e5cc3bf
+$ docker update 9331e4c37ed5 --restart=always
+$ docker run -d --name node/koa-server -p 9003:7001
+```
+### 10，mongodb构建表
+1,npx sequelize migration:generate  --name=init-users  
+2,在database/migrations 目录下 构建users表models
+3,npx sequelize db:migrate 执行
