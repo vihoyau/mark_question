@@ -55,6 +55,8 @@ $ docker update 9331e4c37ed5 --restart=always
 $ docker run -d --name node/koa-server -p 9003:7001
 ```
 ### 10，mongodb构建表
+```
 1,npx sequelize migration:generate  --name=init-users  
 2,在database/migrations 目录下 构建users表models
 3,npx sequelize db:migrate 执行
+```
