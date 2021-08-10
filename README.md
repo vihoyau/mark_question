@@ -60,3 +60,11 @@ $ docker run -d --name node/koa-server -p 9003:7001
 2,在database/migrations 目录下 构建users表models
 3,npx sequelize db:migrate 执行
 ```
+### 11，mysql 备份
+```
+1,备份网络问题，公司路由器拦截，每天自动备份可能下线 
+2,备份的脚本语句，需要加--single-transaction --default-character-set=utf8mb4 避免编码问题
+3,恢复方式，从手动excute改成命令方式。
+4,使用--single-transaction保证dump文件的有效性
+5,恢复脚本shell，需要拷贝本地sql进入docker，然后drop table，再执行sql。使用source xx.sql 
+```
